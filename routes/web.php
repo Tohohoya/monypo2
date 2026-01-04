@@ -132,3 +132,7 @@ Route::get('/debug-db', function () {
         return 'DB ERROR: ' . $e->getMessage();
     }
 });
+
+Route::get('/debug-users-columns', function () {
+    return DB::select('SHOW COLUMNS FROM users');
+});
