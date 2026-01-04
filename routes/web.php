@@ -119,3 +119,16 @@ Route::get('/debug-env', function () {
         'DB_PASSWORD' => env('DB_PASSWORD'),
     ];
 });
+
+Route::get('/debug-db', function () {
+    try {
+        $pdo = DB::connection()->getPdo();
+        return [
+            'driver' => DB::connection()->getDriverName(),
+            'database' => DB::connection()->getDatabaseName(),
+            'status' => $pdo->getAttribute(PDO::ATTR_CONNECTION_STATUS),
+        ];
+    } catch (\Exception $e) {
+        return 'DB ERROR: ' . $e->getMessage();
+    }
+});
