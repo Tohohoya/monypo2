@@ -8,12 +8,16 @@ use Illuminate\Http\Request;
 
 class ChildMiddleware
 {
-    public function handle($request, Closure $next)
+public function handle($request, Closure $next)
     {
-        if (!Auth::check() || Auth::user()->role !== 'child') {
-            abort(403);
+        if (!Auth::check()) {
+            return $next($request);
         }
 
-        return $next($request);
+        if (Auth::user()->role === 'child') {
+            return $next($request);
+        }
+
+        return redirect('/login');
     }
 }

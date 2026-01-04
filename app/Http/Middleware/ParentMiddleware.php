@@ -9,9 +9,13 @@ class ParentMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $user = Auth::user();
+        // 未ログインなら何もせず通す（auth ミドルウェアが処理する）
+        if (!Auth::check()) {
+            return $next($request);
+        }
 
-        if ($user && $user->role === 'parent') {
+        // ログイン済みなら role をチェック
+        if (Auth::user()->role === 'parent') {
             return $next($request);
         }
 
