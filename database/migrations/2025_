@@ -1,0 +1,13 @@
+public function up()
+{
+    Schema::create('families', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->timestamps();
+    });
+}
+
+public function down()
+{
+    Schema::dropIfExists('families');
+}

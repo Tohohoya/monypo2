@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components {
+    .parent-theme h1,
+    .parent-theme h2,
+    .parent-theme a {
+        @apply text-blue-700;
+    }
+
+    .parent-theme .card {
+        @apply bg-blue-50 shadow rounded p-4;
+    }
+}
