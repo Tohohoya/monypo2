@@ -140,3 +140,8 @@ Route::get('/debug-users-columns', function () {
 Route::get('/debug-migrations', function () {
     return DB::table('migrations')->pluck('migration');
 });
+
+Route::get('/debug-migration-files', function () {
+    $files = File::files(database_path('migrations'));
+    return collect($files)->map(fn($f) => $f->getFilename())->values();
+});
