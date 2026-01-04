@@ -145,3 +145,7 @@ Route::get('/debug-migration-files', function () {
     $files = File::files(database_path('migrations'));
     return collect($files)->map(fn($f) => $f->getFilename())->values();
 });
+
+Route::get('/debug-error', function () {
+    return file_get_contents(storage_path('logs/laravel.log'));
+});
