@@ -16,6 +16,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+public function handle($request, Closure $next)
+{
+    // 未ログインなら何もせず通す（auth ミドルウェアが処理する）
+    if (!Auth::check()) {
+        return $next($request);
+    }
+
+    // ログイン済みなら role をチェック
+    if (Auth::user()->role === 'parent') {
+        return $next($request);
+    }
+
+    return redirect('/login');
+}
+
 // ログイン後の振り分け（auth のみ）
 Route::get('/dashboard', function () {
     $user = Auth::user();
