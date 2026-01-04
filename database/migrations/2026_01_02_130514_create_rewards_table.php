@@ -10,15 +10,22 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('rewards', function (Blueprint $table) {
-        $table->id();
-        $table->unsignedBigInteger('family_id');
-        $table->string('title');
-        $table->text('description')->nullable();
-        $table->integer('cost'); // 必要ポイント
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('rewards', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('family_id');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->integer('cost'); // 必要ポイント
+            $table->timestamps();
+        });
+    }
 
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::dropIfExists('rewards');
+    }
 };
