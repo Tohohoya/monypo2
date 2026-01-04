@@ -136,3 +136,7 @@ Route::get('/debug-db', function () {
 Route::get('/debug-users-columns', function () {
     return DB::select('SHOW COLUMNS FROM users');
 });
+
+Route::get('/debug-migrations', function () {
+    return DB::table('migrations')->pluck('migration');
+});
