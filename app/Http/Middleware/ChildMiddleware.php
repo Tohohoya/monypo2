@@ -11,7 +11,7 @@ class ChildMiddleware
     public function handle($request, Closure $next)
     {
         if (!Auth::check() || Auth::user()->role !== 'child') {
-            return redirect()->route('login');
+            abort(403);
         }
 
         return $next($request);
