@@ -147,5 +147,6 @@ Route::get('/debug-migration-files', function () {
 });
 
 Route::get('/debug-error', function () {
-    return file_get_contents(storage_path('logs/laravel.log'));
+    $log = file(storage_path('logs/laravel.log'));
+    return array_slice($log, -20); // 最後の20行だけ返す
 });
