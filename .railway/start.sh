@@ -1,16 +1,19 @@
 #!/bin/bash
 
 # .env を生成
-echo "APP_KEY=$(php artisan key:generate --show)" > .env
-echo "APP_URL=https://monypo2-production.up.railway.app" >> .env
-echo "DB_CONNECTION=${DB_CONNECTION}" >> .env
-echo "DB_HOST=${DB_HOST}" >> .env
-echo "DB_PORT=${DB_PORT}" >> .env
-echo "DB_DATABASE=${DB_DATABASE}" >> .env
-echo "DB_USERNAME=${DB_USERNAME}" >> .env
-echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+cat <<EOF > .env
+APP_KEY=$(php artisan key:generate --show)
+APP_URL=https://monypo2-production.up.railway.app
+DB_CONNECTION=mysql
+DB_HOST=$DB_HOST
+DB_PORT=$DB_PORT
+DB_DATABASE=$DB_DATABASE
+DB_USERNAME=$DB_USERNAME
+DB_PASSWORD=$DB_PASSWORD
+EOF
 
 # Laravel キャッシュとマイグレーション
+php artisan config:clear
 php artisan config:cache
 php artisan migrate --force
 
