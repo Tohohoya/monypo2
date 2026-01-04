@@ -9,6 +9,8 @@ use App\Http\Controllers\ParentRewardController;
 use App\Http\Controllers\ChildRewardController;
 use App\Http\Controllers\ParentRewardRequestController;
 
+require __DIR__.'/auth.php';
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -107,7 +109,6 @@ Route::middleware(['auth', 'child'])->group(function () {
     ->name('child.chores.complete')
     ->middleware('auth', 'child');
 });
-require __DIR__.'/auth.php';
 
 Route::get('/debug-env', function () {
     return [
