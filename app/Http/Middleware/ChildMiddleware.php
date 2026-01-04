@@ -10,8 +10,8 @@ class ChildMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->role !== 'child') {
-            return redirect()->route('parent.dashboard');
+        if (!Auth::check() || Auth::user()->role !== 'child') {
+            return redirect()->route('login');
         }
 
         return $next($request);
