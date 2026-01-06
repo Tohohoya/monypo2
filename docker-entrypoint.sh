@@ -36,16 +36,16 @@ if [ ! -f .env ]; then
     echo "📝 Creating .env file..."
     cp .env.example .env
     # Update database settings for Docker
-    sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
-    sed -i 's/# DB_HOST=.*/DB_HOST=db/' .env
-    sed -i 's/# DB_PORT=.*/DB_PORT=3306/' .env
-    sed -i 's/# DB_DATABASE=.*/DB_DATABASE=monypo2/' .env
-    sed -i 's/# DB_USERNAME=.*/DB_USERNAME=monypo2_user/' .env
-    sed -i 's/# DB_PASSWORD=.*/DB_PASSWORD=secret/' .env
+    sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+    sed -i 's/^# *DB_HOST=.*/DB_HOST=db/' .env
+    sed -i 's/^# *DB_PORT=.*/DB_PORT=3306/' .env
+    sed -i 's/^# *DB_DATABASE=.*/DB_DATABASE=monypo2/' .env
+    sed -i 's/^# *DB_USERNAME=.*/DB_USERNAME=monypo2_user/' .env
+    sed -i 's/^# *DB_PASSWORD=.*/DB_PASSWORD=secret/' .env
 fi
 
 # Generate application key if not set
-if ! grep -q "APP_KEY=base64:" .env 2>/dev/null || [ -z "$(grep APP_KEY .env | cut -d'=' -f2)" ]; then
+if ! grep -q '^APP_KEY=.\+' .env 2>/dev/null; then
     echo "🔑 Generating application key..."
     php artisan key:generate --force
 fi
