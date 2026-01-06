@@ -2,7 +2,7 @@
 
 家族のお手伝いを管理し、ポイントでご褒美を交換できるアプリケーションです。
 
-## Docker での起動方法
+## 🚀 Docker での起動方法
 
 ### 必要なもの
 - Docker
@@ -27,9 +27,12 @@ docker compose up -d
 
 初回起動時は自動的にデータベースのマイグレーションが実行されます。
 
+📖 **詳細なドキュメント**: [DOCKER.md](DOCKER.md) を参照してください。
+
 ### 便利なコマンド（Makefileを使用）
 
 ```bash
+make help        # ヘルプを表示
 make up          # コンテナ起動
 make down        # コンテナ停止
 make restart     # コンテナ再起動
@@ -41,7 +44,7 @@ make test        # テスト実行
 make clean       # 完全クリーンアップ
 ```
 
-### Docker なしでの起動方法
+## 💻 Docker なしでの起動方法
 
 ```bash
 # 依存関係のインストール
@@ -63,7 +66,7 @@ npm run dev
 
 アプリケーションは http://localhost:8000 でアクセスできます。
 
-### トラブルシューティング
+## 🔧 トラブルシューティング
 
 **ポートが既に使用されている場合:**
 `docker-compose.yml` のポート番号を変更してください。
@@ -91,7 +94,7 @@ docker compose exec app composer install
 docker compose exec app npm install
 ```
 
-## 機能
+## ✨ 機能
 
 - 👨‍👩‍👧‍👦 親と子どもの役割管理
 - 📝 お手伝いの作成と管理
