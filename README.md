@@ -18,7 +18,7 @@ cd monypo2
 
 2. **Dockerコンテナを起動**
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 3. **アプリケーションにアクセス**
@@ -72,23 +72,23 @@ npm run dev
 ```bash
 make fresh
 # または
-docker-compose exec app php artisan migrate:fresh --seed
+docker compose exec app php artisan migrate:fresh --seed
 ```
 
 **ログを確認したい場合:**
 ```bash
 make logs
 # または個別に
-docker-compose logs app
-docker-compose logs db
+docker compose logs app
+docker compose logs db
 ```
 
 **依存関係の再インストール:**
 ```bash
 make install
 # または
-docker-compose exec app composer install
-docker-compose exec app npm install
+docker compose exec app composer install
+docker compose exec app npm install
 ```
 
 ## 機能
