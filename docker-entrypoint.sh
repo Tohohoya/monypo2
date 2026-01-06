@@ -3,6 +3,18 @@ set -e
 
 echo "🚀 Starting Monypo2 application..."
 
+# Install Composer dependencies if vendor directory doesn't exist
+if [ ! -d "vendor" ]; then
+    echo "📦 Installing Composer dependencies..."
+    composer install --no-interaction
+fi
+
+# Install NPM dependencies if node_modules directory doesn't exist
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing NPM dependencies..."
+    npm install
+fi
+
 # Wait for database to be ready
 echo "⏳ Waiting for database..."
 max_retries=30
