@@ -1,11 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Monypo2 - お手伝い管理アプリ
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+家族のお手伝いを管理し、ポイントでご褒美を交換できるアプリケーションです。
+
+## Docker での起動方法
+
+### 必要なもの
+- Docker
+- Docker Compose
+
+### クイックスタート
+
+1. **リポジトリをクローン**
+```bash
+git clone https://github.com/Tohohoya/monypo2.git
+cd monypo2
+```
+
+2. **Dockerコンテナを起動**
+```bash
+docker-compose up -d
+```
+
+3. **アプリケーションにアクセス**
+- アプリケーション: http://localhost:8000
+- データベース: localhost:3306
+
+初回起動時は自動的にデータベースのマイグレーションが実行されます。
+
+### 便利なコマンド（Makefileを使用）
+
+```bash
+make up          # コンテナ起動
+make down        # コンテナ停止
+make restart     # コンテナ再起動
+make logs        # ログ表示
+make shell       # アプリケーションコンテナに接続
+make migrate     # マイグレーション実行
+make fresh       # データベースをリセット
+make test        # テスト実行
+make clean       # 完全クリーンアップ
+```
+
+### Docker なしでの起動方法
+
+```bash
+# 依存関係のインストール
+composer install
+npm install
+
+# 環境設定
+cp .env.example .env
+php artisan key:generate
+
+# データベースのセットアップ
+php artisan migrate
+php artisan db:seed
+
+# 開発サーバーの起動
+php artisan serve &
+npm run dev
+```
+
+アプリケーションは http://localhost:8000 でアクセスできます。
+
+### トラブルシューティング
+
+**ポートが既に使用されている場合:**
+`docker-compose.yml` のポート番号を変更してください。
+
+**データベースをリセットしたい場合:**
+```bash
+make fresh
+# または
+docker-compose exec app php artisan migrate:fresh --seed
+```
+
+**ログを確認したい場合:**
+```bash
+make logs
+# または個別に
+docker-compose logs app
+docker-compose logs db
+```
+
+**依存関係の再インストール:**
+```bash
+make install
+# または
+docker-compose exec app composer install
+docker-compose exec app npm install
+```
+
+## 機能
+
+- 👨‍👩‍👧‍👦 親と子どもの役割管理
+- 📝 お手伝いの作成と管理
+- ✅ お手伝いの完了承認
+- 🎁 ポイント制ご褒美システム
+- 💰 ポイント交換申請と承認
+
+---
 
 ## About Laravel
 

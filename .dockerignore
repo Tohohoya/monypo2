@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+vendor
+node_modules
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+storage/logs/*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*.sublime-*
+
+# Docker
+docker-compose.override.yml
+Dockerfile.dev
+
+# Build artifacts
+public/hot
+public/storage
+public/build
+storage/*.key
+
+# Testing
+.phpunit.result.cache
+coverage
+
+# Misc
+.editorconfig
+README.md
