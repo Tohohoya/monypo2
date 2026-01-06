@@ -256,15 +256,20 @@ async function approveCompletion(completionId) {
 // 子どもポイント一覧取得
 async function loadChildrenPoints() {
     try {
-        const response = await fetch(`${API_BASE_URL}/points/2`); // child1のID
+        // Get all users and filter children
+        // For simplicity, we'll just show child1 (id:2) for now
+        // In a real app, you'd fetch all children from an API endpoint
+        const childId = 2; // child1のID
+        const response = await fetch(`${API_BASE_URL}/points/${childId}`);
         const points = await response.json();
         
         const childrenPoints = document.getElementById('childrenPoints');
         
+        // Fetch child name from a user endpoint (simplified version)
         childrenPoints.innerHTML = `
             <div class="child-item">
                 <div class="child-info">
-                    <div class="task-title">太郎</div>
+                    <div class="task-title">太郎 (child1)</div>
                     <div>獲得ポイント: ${points.earned}</div>
                     <div>使用ポイント: ${points.used}</div>
                     <div style="font-weight: bold; color: #667eea;">残高: ${points.balance}ポイント</div>

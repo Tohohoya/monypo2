@@ -13,6 +13,8 @@ $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 $app = AppFactory::create();
 
 // CORS設定
+// 注意: 本番環境では '*' ではなく、特定のオリジンを指定してください
+// 例: ->withHeader('Access-Control-Allow-Origin', 'https://your-domain.com')
 $app->options('/{routes:.+}', function (Request $request, Response $response) {
     return $response;
 });
@@ -65,11 +67,42 @@ $app->get('/api/tasks', function (Request $request, Response $response) use ($db
 $app->post('/api/tasks', function (Request $request, Response $response) use ($db) {
     $data = json_decode($request->getBody()->getContents(), true);
     
+    // Validate input
+    if (empty($data['title']) || !isset($data['points']) || !isset($data['created_by'])) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => '必須フィールドが不足しています'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+    
+    $points = intval($data['points']);
+    if ($points <= 0) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => 'ポイントは正の整数である必要があります'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+    
+    // Verify user is an adult
+    $stmt = $db->prepare('SELECT role FROM users WHERE id = ?');
+    $stmt->execute([$data['created_by']]);
+    $user = $stmt->fetch();
+    
+    if (!$user || $user['role'] !== 'adult') {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => 'タスクを作成する権限がありません'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+    }
+    
     $stmt = $db->prepare('INSERT INTO tasks (title, description, points, created_by) VALUES (?, ?, ?, ?)');
     $stmt->execute([
         $data['title'],
         $data['description'] ?? '',
-        $data['points'],
+        $points,
         $data['created_by']
     ]);
     
@@ -85,6 +118,30 @@ $app->post('/api/tasks/{id}/complete', function (Request $request, Response $res
     $data = json_decode($request->getBody()->getContents(), true);
     $taskId = $args['id'];
     $childId = $data['child_id'];
+    
+    // Validate task exists
+    $stmt = $db->prepare('SELECT id FROM tasks WHERE id = ?');
+    $stmt->execute([$taskId]);
+    if (!$stmt->fetch()) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => 'タスクが見つかりません'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+    }
+    
+    // Validate child user exists and is a child
+    $stmt = $db->prepare('SELECT role FROM users WHERE id = ?');
+    $stmt->execute([$childId]);
+    $user = $stmt->fetch();
+    
+    if (!$user || $user['role'] !== 'child') {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => '無効な子どもユーザーです'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
     
     $stmt = $db->prepare('INSERT INTO task_completions (task_id, child_id, status) VALUES (?, ?, ?)');
     $stmt->execute([$taskId, $childId, 'pending']);
@@ -149,10 +206,50 @@ $app->get('/api/points/{childId}', function (Request $request, Response $respons
 $app->post('/api/points/use', function (Request $request, Response $response) use ($db) {
     $data = json_decode($request->getBody()->getContents(), true);
     
+    // Validate input
+    if (!isset($data['child_id']) || !isset($data['points']) || empty($data['purpose'])) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => '必須フィールドが不足しています'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+    
+    $points = intval($data['points']);
+    if ($points <= 0) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => 'ポイントは正の整数である必要があります'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+    
+    // Check balance
+    $stmt = $db->prepare('SELECT COALESCE(SUM(t.points), 0) as earned 
+                          FROM task_completions tc
+                          LEFT JOIN tasks t ON tc.task_id = t.id
+                          WHERE tc.child_id = ? AND tc.status = "approved"');
+    $stmt->execute([$data['child_id']]);
+    $earned = $stmt->fetch()['earned'];
+    
+    $stmt = $db->prepare('SELECT COALESCE(SUM(points), 0) as used FROM point_usages WHERE child_id = ?');
+    $stmt->execute([$data['child_id']]);
+    $used = $stmt->fetch()['used'];
+    
+    $balance = $earned - $used;
+    
+    if ($points > $balance) {
+        $response->getBody()->write(json_encode([
+            'success' => false,
+            'message' => 'ポイントが不足しています'
+        ]));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+    }
+    
     $stmt = $db->prepare('INSERT INTO point_usages (child_id, points, purpose) VALUES (?, ?, ?)');
     $stmt->execute([
         $data['child_id'],
-        $data['points'],
+        $points,
         $data['purpose']
     ]);
     
