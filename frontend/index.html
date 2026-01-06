@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monypo2 - お手伝い管理アプリ</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="loginScreen" class="screen active">
+        <div class="container">
+            <div class="card login-card">
+                <h1 class="app-title">🌟 Monypo2</h1>
+                <h2>お手伝い管理アプリ</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">ユーザー名</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">パスワード</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ログイン</button>
+                    <div id="loginError" class="error-message"></div>
+                </form>
+                <div class="login-info">
+                    <p>デフォルトユーザー:</p>
+                    <p>大人: parent1 / password</p>
+                    <p>子ども: child1 / password</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 大人用画面 -->
+    <div id="adultScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <h1>大人用画面</h1>
+                <div class="user-info">
+                    <span id="adultUserName"></span>
+                    <button id="adultLogout" class="btn btn-secondary">ログアウト</button>
+                </div>
+            </div>
+
+            <!-- タブナビゲーション -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tasks">タスク管理</button>
+                <button class="tab-btn" data-tab="approvals">承認待ち</button>
+                <button class="tab-btn" data-tab="children">子ども管理</button>
+            </div>
+
+            <!-- タスク管理タブ -->
+            <div id="tasksTab" class="tab-content active">
+                <div class="card">
+                    <h2>新しいお手伝いを登録</h2>
+                    <form id="addTaskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">タイトル</label>
+                            <input type="text" id="taskTitle" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDescription">説明</label>
+                            <textarea id="taskDescription" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPoints">ポイント</label>
+                            <input type="number" id="taskPoints" name="points" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">登録</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>お手伝い一覧</h2>
+                    <div id="tasksList"></div>
+                </div>
+            </div>
+
+            <!-- 承認待ちタブ -->
+            <div id="approvalsTab" class="tab-content">
+                <div class="card">
+                    <h2>承認待ちのお手伝い</h2>
+                    <div id="pendingCompletions"></div>
+                </div>
+            </div>
+
+            <!-- 子ども管理タブ -->
+            <div id="childrenTab" class="tab-content">
+                <div class="card">
+                    <h2>子どものポイント状況</h2>
+                    <div id="childrenPoints"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 子ども用画面 -->
+    <div id="childScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <h1>子ども用画面</h1>
+                <div class="user-info">
+                    <span id="childUserName"></span>
+                    <button id="childLogout" class="btn btn-secondary">ログアウト</button>
+                </div>
+            </div>
+
+            <!-- タブナビゲーション -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="available">お手伝い一覧</button>
+                <button class="tab-btn" data-tab="history">履歴</button>
+                <button class="tab-btn" data-tab="points">ポイント</button>
+            </div>
+
+            <!-- お手伝い一覧タブ -->
+            <div id="availableTab" class="tab-content active">
+                <div class="card">
+                    <h2>お手伝い一覧</h2>
+                    <div id="availableTasks"></div>
+                </div>
+            </div>
+
+            <!-- 履歴タブ -->
+            <div id="historyTab" class="tab-content">
+                <div class="card">
+                    <h2>お手伝い履歴</h2>
+                    <div id="completionHistory"></div>
+                </div>
+            </div>
+
+            <!-- ポイントタブ -->
+            <div id="pointsTab" class="tab-content">
+                <div class="card">
+                    <h2>ポイント残高</h2>
+                    <div id="pointsBalance" class="points-display"></div>
+                </div>
+
+                <div class="card">
+                    <h2>ポイントを使う</h2>
+                    <form id="usePointsForm">
+                        <div class="form-group">
+                            <label for="pointsToUse">使用ポイント</label>
+                            <input type="number" id="pointsToUse" name="points" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pointsPurpose">使い道</label>
+                            <input type="text" id="pointsPurpose" name="purpose" placeholder="例: おもちゃを買う" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">ポイントを使う</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>ポイント使用履歴</h2>
+                    <div id="pointsHistory"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

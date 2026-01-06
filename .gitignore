@@ -21,4 +21,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-.env
+
+# Monypo2 Backend
+/backend/vendor/
+/backend/database/*.db
