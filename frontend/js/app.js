@@ -399,15 +399,6 @@ async function handleUsePoints(e) {
     };
     
     try {
-        // 残高確認
-        const balanceResponse = await fetch(`${API_BASE_URL}/points/${currentUser.id}`);
-        const balance = await balanceResponse.json();
-        
-        if (data.points > balance.balance) {
-            alert('ポイントが足りません！');
-            return;
-        }
-        
         const response = await fetch(`${API_BASE_URL}/points/use`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -420,6 +411,8 @@ async function handleUsePoints(e) {
             e.target.reset();
             await loadPointsData();
             alert('ポイントを使用しました！');
+        } else {
+            alert(result.message || 'ポイントの使用に失敗しました');
         }
     } catch (error) {
         console.error('Failed to use points:', error);
